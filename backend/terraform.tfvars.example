@@ -1,0 +1,5 @@
+aws_region = "ap-south-1"
+
+bucket_name = "swen14-terraform-state-2026"
+
+dynamodb_table_name = "swen14-terraform-lock-table"
