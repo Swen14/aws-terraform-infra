@@ -1,26 +1,61 @@
 # AWS Terraform Infrastructure Project
 
-## Overview
+## Project Overview
 
-This project demonstrates Infrastructure as Code (IaC) using Terraform on AWS. The infrastructure is built using reusable Terraform modules and follows a production-style folder structure with separate backend, environments, and modules directories.
+This project demonstrates Infrastructure as Code (IaC) on AWS using Terraform. The infrastructure is designed using reusable Terraform modules and follows a production-style project structure with separate environments, modules, and remote state management.
 
 The project provisions:
 
-* Remote Terraform State Storage using S3
-* State Locking using DynamoDB
-* Custom VPC
-* Public and Private Subnets
+* AWS VPC
+* Public Subnets
+* Private Subnet
 * Internet Gateway
-* Route Table and Associations
+* Route Table & Associations
 * Security Group
 * EC2 Instance
 * Application Load Balancer (ALB)
 * Target Group
-* Terraform Outputs
+* Remote Terraform State using S3
+* State Locking using DynamoDB
 
 ---
 
-## Project Structure
+# Architecture
+
+```text
+Internet
+    │
+    ▼
+Application Load Balancer
+    │
+    ▼
+Security Group
+    │
+    ▼
+EC2 Instance
+    │
+    ▼
+Public Subnet
+    │
+    ▼
+VPC
+```
+
+Terraform Backend:
+
+```text
+Terraform
+    │
+    ▼
+S3 Bucket (Remote State)
+    │
+    ▼
+DynamoDB Table (State Locking)
+```
+
+---
+
+# Project Structure
 
 ```text
 aws-terraform-infra/
@@ -44,103 +79,119 @@ aws-terraform-infra/
 │
 ├── modules/
 │   ├── vpc/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
 │   ├── security-group/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
 │   ├── ec2/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   │
 │   └── alb/
+│       ├── main.tf
+│       ├── variables.tf
+│       └── outputs.tf
 │
 ├── screenshots/
-│
-├── .gitignore
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## Architecture
-
-```text
-Internet
-    │
-    ▼
-Application Load Balancer
-    │
-    ▼
-Security Group
-    │
-    ▼
-EC2 Instance
-    │
-    ▼
-Public Subnet
-    │
-    ▼
-VPC
-```
-
-Terraform State:
-
-```text
-Terraform
-    │
-    ▼
-S3 Bucket (Remote State)
-    │
-    ▼
-DynamoDB Table (State Locking)
-```
-
----
-
-## Technologies Used
+# Technologies Used
 
 * Terraform
 * AWS EC2
 * AWS VPC
-* AWS Subnets
-* AWS Internet Gateway
-* AWS Route Tables
-* AWS Security Groups
-* AWS Application Load Balancer
 * AWS S3
 * AWS DynamoDB
+* AWS Application Load Balancer
+* AWS Security Groups
+* AWS Route Tables
+* AWS Internet Gateway
 * Git
 * GitHub
 
 ---
 
-## Terraform Workflow
+# Key Features
 
-Initialize Terraform:
+### Remote State Management
+
+Terraform state is stored remotely in an S3 bucket.
+
+Benefits:
+
+* Centralized state storage
+* Team collaboration
+* State backup and recovery
+
+### State Locking
+
+DynamoDB is used to prevent simultaneous Terraform operations.
+
+Benefits:
+
+* Prevents state corruption
+* Ensures safe infrastructure updates
+
+### Modular Design
+
+Reusable modules were created for:
+
+* VPC
+* Security Group
+* EC2
+* ALB
+
+Benefits:
+
+* Reusability
+* Maintainability
+* Scalability
+
+---
+
+# Terraform Workflow
+
+Initialize Terraform
 
 ```bash
 terraform init
 ```
 
-Validate Configuration:
+Validate Configuration
 
 ```bash
 terraform validate
 ```
 
-View Execution Plan:
+Preview Infrastructure Changes
 
 ```bash
 terraform plan
 ```
 
-Create Infrastructure:
+Create Infrastructure
 
 ```bash
 terraform apply
 ```
 
-View Outputs:
+View Outputs
 
 ```bash
 terraform output
 ```
 
-Destroy Infrastructure:
+Destroy Infrastructure
 
 ```bash
 terraform destroy
@@ -148,128 +199,108 @@ terraform destroy
 
 ---
 
-## Remote State Management
+# Screenshots
 
-The backend folder creates:
+## Backend Infrastructure
 
-### S3 Bucket
+### Terraform Apply Success
 
-Used to store:
+![Terraform Apply](screenshots/01-terraform-apply-success.png)
 
-* terraform.tfstate
-* Terraform infrastructure state
+### S3 Bucket Created
 
-Benefits:
+![S3 Bucket](screenshots/02-s3-bucket-created.png)
 
-* Centralized state management
-* Team collaboration
-* State backup
+### S3 Versioning Enabled
 
-### DynamoDB Table
+![S3 Versioning](screenshots/03-s3-versioning-enabled.png)
 
-Used for:
+### S3 Encryption Enabled
 
-* State locking
+![S3 Encryption](screenshots/04-s3-encryption-enabled.png)
 
-Benefits:
+### S3 Public Access Blocked
 
-* Prevents multiple users from modifying infrastructure simultaneously
-* Avoids state corruption
+![S3 Public Access](screenshots/05-s3-public-access-blocked.png)
 
----
+### DynamoDB Table Created
 
-## Modules
-
-### VPC Module
-
-Creates:
-
-* VPC
-* Public Subnets
-* Private Subnet
-* Internet Gateway
-* Route Table
-* Route Table Associations
-
-### Security Group Module
-
-Creates:
-
-* HTTP Rule (Port 80)
-* SSH Rule (Port 22)
-* Outbound Access Rules
-
-### EC2 Module
-
-Creates:
-
-* EC2 Instance
-* Public IP Association
-* Security Group Attachment
-
-### ALB Module
-
-Creates:
-
-* Application Load Balancer
-* Target Group
-* Listener
-* Target Group Attachment
+![DynamoDB](screenshots/06-dynamodb-table-created.png)
 
 ---
 
-## Screenshots
+## Development Environment
 
-### Backend Infrastructure
+### VPC Created
 
-* 01-backend-s3-bucket-created.png
-* 02-backend-versioning-enabled.png
-* 03-backend-encryption-enabled.png
-* 04-backend-public-access-blocked.png
-* 05-backend-dynamodb-created.png
-* 06-backend-terraform-output.png
+![VPC](screenshots/07-dev-vpc-created.png)
 
-### Development Environment
+### Public and Private Subnets
 
-* 07-dev-vpc-created.png
-* 08-dev-subnets-created.png
-* 09-dev-internet-gateway-created.png
-* 10-dev-route-table-created.png
-* 11-dev-security-group-created.png
-* 12-dev-ec2-created.png
-* 13-dev-alb-created.png
-* 14-dev-target-group-created.png
-* 15-terraform-output.png
+![Subnets](screenshots/08-dev-subnets-created.png)
+
+### Internet Gateway Created
+
+![Internet Gateway](screenshots/09-dev-internet-gateway-created.png)
+
+### Route Table Created
+
+![Route Table](screenshots/10-dev-route-table-created.png)
+
+### Security Group Created
+
+![Security Group](screenshots/11-dev-security-group-created.png)
+
+### EC2 Instance Created
+
+![EC2](screenshots/12-dev-ec2-created.png)
+
+### Application Load Balancer Created
+
+![ALB](screenshots/13-dev-alb-created.png)
+
+### Target Group Created
+
+![Target Group](screenshots/14-dev-target-group-created.png)
+
+### Terraform Outputs
+
+![Terraform Output](screenshots/15-terraform-output.png)
 
 ---
 
-## Key Concepts Demonstrated
+# Learning Outcomes
+
+Through this project I learned:
 
 * Infrastructure as Code (IaC)
-* Modular Terraform Design
-* Remote State Management
-* State Locking
-* AWS Networking
-* Terraform Variables
-* Terraform Outputs
+* Terraform State Management
+* Remote State with S3
+* State Locking with DynamoDB
 * Terraform Modules
-* Git Version Control
-* AWS Infrastructure Automation
+* AWS Networking Fundamentals
+* Security Groups
+* Load Balancing Concepts
+* Environment-Based Infrastructure Design
+* Git and GitHub Integration
+* Infrastructure Automation
 
 ---
 
-## Learning Outcomes
+# Future Improvements
 
-Through this project, I learned:
+* Auto Scaling Group
+* NAT Gateway
+* Multi-Environment Setup (Dev, Staging, Prod)
+* Route53 Integration
+* HTTPS using ACM
+* CI/CD Pipeline using GitHub Actions
+* Terraform Cloud Integration
 
-* How Terraform manages infrastructure
-* How remote state works
-* Why state locking is important
-* How Terraform modules improve reusability
-* How AWS networking components connect together
-* How to structure Terraform projects for real-world environments
-* How to use Git and GitHub with Terraform projects
-* How to provision AWS infrastructure using reusable modules
+---
 
-```
-```
+# Author
+
+Swen Lemos
+
+Aspiring DevOps Engineer | AWS | Linux | Terraform | Git | Infrastructure as Code
