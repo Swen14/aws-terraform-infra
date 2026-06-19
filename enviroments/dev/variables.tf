@@ -13,3 +13,11 @@ variable "private_subnet_cidr" {
 variable "availability_zone" {
   type = string
 }
+
+variable "allowed_http_cidr" {
+  type = list(string)
+}
+
+variable "allowed_ssh_cidr" {
+  type = list(string)
+}
