@@ -303,4 +303,3 @@ Through this project I learned:
 
 Swen Lemos
 
-Aspiring DevOps Engineer | AWS | Linux | Terraform | Git | Infrastructure as Code
