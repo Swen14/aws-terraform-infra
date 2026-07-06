@@ -15,7 +15,7 @@ The project provisions:
 * EC2 Instance
 * Application Load Balancer (ALB)
 * Target Group
-* Remote Terraform State using S3
+* Remote Terraform State Using S3
 * State Locking using DynamoDB
 
 ---
