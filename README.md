@@ -8,7 +8,7 @@ The project provisions:
 
 * AWS VPC
 * Public Subnets
-* Private Subnet
+* Private Subnets
 * Internet Gateway
 * Route Table & Associations
 * Security Group
